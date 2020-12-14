@@ -155,8 +155,8 @@ jobs:
                       echo "Publishing Docker image with following tag: ${TAG}"
                       echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
                       ./mvnw clean install -DskipTests -Djdk.tls.client.protocols=TLSv1.2
-                      docker build -t $DOCKER_USER/fhir-bridge:$TAG .
-                      docker push $DOCKER_USER/fhir-bridge:$TAG
+                      docker build -t $DOCKER_USER/fhir-bridge-old:$TAG .
+                      docker push $DOCKER_USER/fhir-bridge-old:$TAG
 
 
 
