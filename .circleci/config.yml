@@ -507,11 +507,11 @@ executors:
         working_directory: ~/projects
         docker:
             - image: cimg/python:3.8.5-node
-            - image: ehrbaseorg/ehrbase-postgres:10
+            - image: ehrbase/ehrbase-postgres:13.4
               environment:
                 POSTGRES_USER: postgres
                 POSTGRES_PASSWORD: postgres
-            - image: postgres:11.5-alpine
+            - image: postgres:13.4
               name: fhirdb
               environment:
                 POSTGRES_USER: fhir_bridge
