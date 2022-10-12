@@ -5,3 +5,13 @@ logging:
     org.hibernate: info
     org.hl7.fhir: info
     org.springframework: info
+
+ehrbase:
+  address: localhost
+  port: 8080
+  path: /ehrbase/rest/openehr/v1/
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:9999/fhir_bridge
+    username: fhir_bridge
+    password: fhir_bridge
