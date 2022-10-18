@@ -44,10 +44,13 @@ $ ./mvnw clean install -DskipTests
 database to execute the Integration Tests and no additional configuration is required.*
 
 #### Start local dev environment
-You can start a local development environment with the dependencies you need to run the app using the `docker-compose.yml` file on the root of the project.
+You can start a local development environment with the dependencies you need to run the app using the `docker-compose.yml` file on the `dev` directory:
 ```
-$ docker-compose up -d
+$ docker-compose -f dev/docker-compose.yml up -d
 ```
+
+In order to be sure EHRbase is running correctly, you can follow the container's logs.
+After the app finishes initializing, you should be able to access http://localhost:8080/ehrbase/swagger-ui/index.html to view the Swagger UI.
 
 #### Configure the application
 Before running the application, you need, at least, to configure the database and EHRbase instance.
@@ -81,6 +84,10 @@ In order to start the application, go to the correct location and use the `java`
 $ cd [fhir-bridge_jar_file_dir]
 $ java -jar fhir-bridge-X.X.X.jar
 ```
+
+You can also start the application by running the `FhirBridgeApplication` class in your IDE of choice.
+Check if everything is working by following the logs.
+After the application started successfully, you should be able to access http://localhost:8888/fhir-bridge/metadata; this should return a file describing the FHIR capabilities of the service (read more about that [here](https://www.hl7.org/fhir/capabilitystatement.html)). 
 
 ## FHIR to openEHR Mappings
 

@@ -10,6 +10,7 @@ ehrbase:
   address: localhost
   port: 8080
   path: /ehrbase/rest/openehr/v1/
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:9999/fhir_bridge
