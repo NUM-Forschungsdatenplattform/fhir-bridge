@@ -28,7 +28,7 @@ services:
       EHRBASE_PASSWORD: ehrbase
 
   fhir-bridge-database:
-    image: postgres:11.5-alpine
+    image: postgres:13.4
     ports:
       - "9999:5432"
     environment:
