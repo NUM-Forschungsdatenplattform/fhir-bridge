@@ -59,8 +59,8 @@ jobs:
     #           88  Y8,        ,8P  88      `8b          `8b
     #   88,   ,d88   Y8a.    .a8P   88      a8P  Y8a     a8P
     #    "Y8888P"     `"Y8888Y"'    88888888P"    "Y88888P"
-    
-    
+
+
     build-and-quicktest-fhirbridge:
         description: Build and test FHIR-bridge
         executor: docker-py3-java11-postgres
@@ -171,7 +171,7 @@ commands:
     #   Y8,           Y8,        ,8P  88   `8b d8'   88  88   `8b d8'   88    d8""""""""8b    88    `8b 88  88         8P          `8b
     #    Y8a.    .a8P  Y8a.    .a8P   88    `888'    88  88    `888'    88   d8'        `8b   88     `8888  88      .a8P   Y8a     a8P
     #     `"Y8888Y"'    `"Y8888Y"'    88     `8'     88  88     `8'     88  d8'          `8b  88      `888  88888888Y"'     "Y88888P"
-    
+
 
     git-clone-ehrbase-repo:
         steps:
@@ -237,7 +237,6 @@ commands:
                         ((timeout--))
                     done
                     echo "REMAINING TIMEOUT: $timeout"
-                    jps
             - run:
                 name: BUILD FHIR-BRIDGE
                 command: |
@@ -296,7 +295,6 @@ commands:
                         ((timeout--))
                     done
                     echo "REMAINING TIMEOUT: $timeout"
-                    jps
             - run:
                 name: Save fhirbridge starup log
                 command: |
@@ -306,7 +304,7 @@ commands:
                 when: always
             - store_artifacts:
                 path: /tmp/logs/fhirbride_log
-      
+
 
     run-robot-integration-tests:
         steps:
@@ -338,7 +336,7 @@ commands:
                     cp tests/results/0/* 00_robot_results/
                 when: always
 
-            
+
     cache-out-fhirbridge-m2-dependencies:
         steps:
             - run:
@@ -354,7 +352,7 @@ commands:
                 key: fhirbridge-{{ checksum "/tmp/fhirbridge_maven_cache_seed" }}
                 paths:
                 - ~/.m2
-    
+
     cache-out-ehrbase-m2-dependencies:
         steps:
             - run:
@@ -362,7 +360,7 @@ commands:
                 command: find ~/projects/ehrbase -name 'pom.xml' | sort | xargs cat > /tmp/ehrbase_maven_cache_seed
             - restore_cache:
                 key: EHRbase-v1-
-    
+
     cache-in-ehrbase-m2-dependencies:
         steps:
             - save_cache:
@@ -442,8 +440,8 @@ commands:
                 paths:
                     - .m2
                     - projects
-    
-    
+
+
     restore-fhirbridge-workspace:
         description: |
             Restores any file / folder that was previously persisted w/ 'persist_to_workspace'.
@@ -462,7 +460,7 @@ commands:
     install-maven:
         description: Installs Maven tool (but only if it's not already installed)
         steps:
-            - run: 
+            - run:
                 name: Install Maven tool
                 command: |
                     sudo killall -9 apt-get || true
@@ -489,7 +487,7 @@ commands:
 orbs:
     openjdk-install: cloudesire/openjdk-install@1.2.3
     sonarcloud: sonarsource/sonarcloud@1.0.2
-  
+
 
 executors:
     docker-python3-java11:
