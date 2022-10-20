@@ -40,7 +40,7 @@ import java.util.UUID;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class FhirBridgeApplicationIT {
+public class FhirBridgeApplicationIT extends AbstractIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(FhirBridgeApplicationIT.class);
 
@@ -82,6 +82,7 @@ public class FhirBridgeApplicationIT {
 
         ehrStatus.setArchetypeNodeId("openEHR-EHR-EHR_STATUS.generic.v1");
         ehrStatus.setName(new DvText("test status"));
+        ehrStatus.setModifiable(true);
 
         UUID ehrId = service.createEhr(ehrStatus);
 
@@ -455,7 +456,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-    
+
     @Test
     public void createRespRate() throws IOException {
         String resource = getContent("classpath:/Observation/observation-example-respiratory-rate.json");
@@ -498,7 +499,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-  
+
     @Test
     public void createBodyWeight() throws IOException {
         String resource = getContent("classpath:/Observation/observation-example-body-weight.json");
@@ -511,7 +512,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-    
+
     @Test
     public void createSofaScore() throws IOException {
         String resource = getContent("classpath:/Observation/observation-sofa-score-example.json");
