@@ -27,7 +27,7 @@ public class AbstractIntegrationTest {
                         .withEnv("EHRBASE_PASSWORD", "ehrbase")
                         .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*", 2));
         ehrbaseDatabaseContainer.start();
-        ehrbaseContainer = new GenericContainer<>(DockerImageName.parse("ehrbase/ehrbase:0.19.0"))
+        ehrbaseContainer = new GenericContainer<>(DockerImageName.parse("ehrbase/ehrbase:0.17.2"))
                 .dependsOn(ehrbaseDatabaseContainer)
                 .withNetwork(ehrbaseNetwork)
                 .withEnv("DB_URL", "jdbc:postgresql://ehrbase-database:5432/ehrbase")

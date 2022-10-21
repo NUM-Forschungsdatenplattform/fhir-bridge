@@ -82,7 +82,6 @@ public class FhirBridgeApplicationIT extends AbstractIntegrationTest {
 
         ehrStatus.setArchetypeNodeId("openEHR-EHR-EHR_STATUS.generic.v1");
         ehrStatus.setName(new DvText("test status"));
-        ehrStatus.setModifiable(true);
 
         UUID ehrId = service.createEhr(ehrStatus);
 
