@@ -64,17 +64,12 @@ jobs:
 
     build-and-quicktest-fhirbridge:
         description: Build and test FHIR-bridge
-        executor: docker-py3-java11-postgres
+        executor: docker-py3-java11
         steps:
             - checkout
             - install-maven
-            - git-clone-ehrbase-repo
             - cache-out-fhirbridge-m2-dependencies
-            - cache-out-ehrbase-m2-dependencies
-            - build-ehrbase
-            - start-ehrbase-server
             - build-and-test-fhirbridge
-            - cache-in-ehrbase-m2-dependencies
             - cache-in-fhirbridge-m2-dependencies
             # - collect-fhirbridge-unittest-results
             - collect-fhirbridge-integrationtest-results
@@ -212,37 +207,13 @@ commands:
         description: | 
             Executes `mvn clean verify`
         steps:
-            - run:
-                name: WAIT FOR EHRBASE SERVER TO BE READY
-                command: |
-                    ls -la
-                    timeout=30
-                    while [ ! -f ehrbase/log ];
-                        do
-                            echo "Waiting for file ehrbase/log ..."
-                            if [ "$timeout" == 0 ]; then
-                                echo "ERROR: timed out while waiting for file ehrbase/log"
-                                exit 1
-                            fi
-                            sleep 1
-                        ((timeout--))
-                    done
-                    while ! (cat ehrbase/log | grep -m 1 "Started EhrBase in");
-                        do
-                            echo "waiting for EHRbase to be ready ...";
-                            if [ "$timeout" == 0 ]; then
-                                echo "WARNING: Did not see a startup message even after waiting 30s"
-                                exit 1
-                            fi
-                            sleep 1;
-                        ((timeout--))
-                    done
-                    echo "REMAINING TIMEOUT: $timeout"
+            - setup_remote_docker:
+                  version: 19.03.13
             - run:
                 name: BUILD FHIR-BRIDGE
                 command: |
                     ls -la
-                    mvn clean verify -Dmaven.javadoc.skip=true -Dspring.profiles.active=ci
+                    mvn clean verify -Dmaven.javadoc.skip=true
 
 
     start-fhirbridge-application:
