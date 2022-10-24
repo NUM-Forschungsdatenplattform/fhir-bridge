@@ -38,8 +38,6 @@ import java.util.UUID;
 /**
  * Integration Tests
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class FhirBridgeApplicationIT extends AbstractIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(FhirBridgeApplicationIT.class);

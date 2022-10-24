@@ -1,6 +1,7 @@
 package org.ehrbase.fhirbridge;
 
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
@@ -9,6 +10,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class AbstractIntegrationTest {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractIntegrationTest.class);
@@ -47,9 +49,9 @@ public class AbstractIntegrationTest {
                 .withExposedPorts(EHRBASE_SERVICE_PORT)
                 .waitingFor(Wait.forLogMessage(".*Started EhrBase in.*", 1));
 
-        log.info("Starting EHRbase database...");
+        log.info("Starting EHRbase...");
         ehrbaseContainer.start();
-        log.info("EHRbase database started.");
+        log.info("EHRbase started.");
     }
 
     @DynamicPropertySource
