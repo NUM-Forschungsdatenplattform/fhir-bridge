@@ -406,7 +406,7 @@ orbs:
 
 
 executors:
-    docker-python3-java11:
+    docker-py3-java11:
         working_directory: ~/projects
         docker:
             - image: cimg/python:3.8.5-node
