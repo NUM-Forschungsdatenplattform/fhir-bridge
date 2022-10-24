@@ -38,14 +38,26 @@ $ git clone https://github.com/ehrbase/fhir-bridge.git
 ```
 #### Build the application
 ```
-$ mvn clean install
+$ ./mvnw clean install -DskipTests
 ```
 *Remark: Unlike the standalone execution that requires a database like PostgreSQL, the build process uses [H2](https://www.h2database.com/html/main.html) 
 database to execute the Integration Tests and no additional configuration is required.*
 
+#### Start local dev environment
+You can start a local development environment with the dependencies you need to run the app using the `docker-compose.yml` file on the `dev` directory:
+```
+$ docker-compose -f dev/docker-compose.yml up -d
+```
+
+In order to be sure EHRbase is running correctly, you can follow the container's logs.
+After the app finishes initializing, you should be able to access http://localhost:8080/ehrbase/swagger-ui/index.html to view the Swagger UI.
+
 #### Configure the application
-Before running the application, you need, at least, to configure the database and EHRbase instance. The easiest solution is to 
-use an `application.yml` file:
+Before running the application, you need, at least, to configure the database and EHRbase instance.
+For local development, the easiest solution is to enable the `dev` profile, which is configured to connect to the local environment mentioned above.
+This will use the configuration in `src/main/resources/application-dev.yml`.
+
+You can also use an `application.yml` file:
 * In the same directory as `fhir-bridge-X-X-X.jar` file.
 * Under a `/config` subdirectory.
 
@@ -73,10 +85,14 @@ $ cd [fhir-bridge_jar_file_dir]
 $ java -jar fhir-bridge-X.X.X.jar
 ```
 
+You can also start the application by running the `FhirBridgeApplication` class in your IDE of choice.
+Check if everything is working by following the logs.
+After the application started successfully, you should be able to access http://localhost:8888/fhir-bridge/metadata; this should return a file describing the FHIR capabilities of the service (read more about that [here](https://www.hl7.org/fhir/capabilitystatement.html)). 
+
 ## FHIR to openEHR Mappings
 
 | FHIR Resource    | FHIR Profile                 | openEHR OPT                                                 |
-| ---------------- | ---------------------------- | ----------------------------------------------------------- |
+|------------------|------------------------------|-------------------------------------------------------------|
 | DiagnosticReport | [DiagnosticReportLab][1]     | [Laborbefund][ckm1]                                         |
 | Observation      | [bodytemp][2]                | [Intensivmedizinisches Monitoring Korpertemperatur][ckm2] * |
 | Observation      | [CoronavirusNachweisTest][3] | [Kennzeichnung Erregernachweis SARS-CoV-2][ckm3]            |
@@ -293,13 +309,13 @@ The audit mechanism uses the AuditEvent resource provided by FHIR:
 ```
 In addition, the AuditEvent endpoint is available to search for resources using the following supported criteria:
 
-| Name | Type | Description |
-| --- | --- | --- |
-| action | token |	Type of action performed during the event |
-| date | date | Time when the event was recorded |
-| entity | reference | Specific instance of resource |
-| outcome | token | Whether the event succeeded or failed |
-| type | token | Type/identifier of event |
+| Name     | Type      | Description                               |
+|----------|-----------|-------------------------------------------|
+| action   | token     | Type of action performed during the event |
+| date     | date      | Time when the event was recorded          |
+| entity   | reference | Specific instance of resource             |
+| outcome  | token     | Whether the event succeeded or failed     |
+| type     | token     | Type/identifier of event                  |
 
 Examples:
 ```
