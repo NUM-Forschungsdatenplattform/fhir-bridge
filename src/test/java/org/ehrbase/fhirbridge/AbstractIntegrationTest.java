@@ -11,12 +11,15 @@ import org.testcontainers.utility.DockerImageName;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AbstractIntegrationTest {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractIntegrationTest.class);
+
     private static final int EHRBASE_SERVICE_PORT = 8080;
 
     private static final GenericContainer<?> ehrbaseContainer;
 
     static {
         Network ehrbaseNetwork = Network.newNetwork();
+
         GenericContainer<?> ehrbaseDatabaseContainer =
                 new GenericContainer<>(DockerImageName.parse("ehrbase/ehrbase-postgres:13.4"))
                         .withNetwork(ehrbaseNetwork)
@@ -26,7 +29,11 @@ public class AbstractIntegrationTest {
                         .withEnv("EHRBASE_USER", "ehrbase")
                         .withEnv("EHRBASE_PASSWORD", "ehrbase")
                         .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*", 2));
+
+        log.info("Starting EHRbase database...");
         ehrbaseDatabaseContainer.start();
+        log.info("EHRbase database started.");
+
         ehrbaseContainer = new GenericContainer<>(DockerImageName.parse("ehrbase/ehrbase:0.17.2"))
                 .dependsOn(ehrbaseDatabaseContainer)
                 .withNetwork(ehrbaseNetwork)
@@ -39,7 +46,10 @@ public class AbstractIntegrationTest {
                 .withEnv("SYSTEM_NAME", "local.ehrbase.org")
                 .withExposedPorts(EHRBASE_SERVICE_PORT)
                 .waitingFor(Wait.forLogMessage(".*Started EhrBase in.*", 1));
+
+        log.info("Starting EHRbase database...");
         ehrbaseContainer.start();
+        log.info("EHRbase database started.");
     }
 
     @DynamicPropertySource

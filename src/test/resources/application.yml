@@ -33,3 +33,6 @@ spring:
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.H2Dialect
+      hibernate.search.lucene_version: LUCENE_CURRENT
+      hibernate.search.default.indexBase: ./lucene
+      hibernate.search.model_mapping: ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory
