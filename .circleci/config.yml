@@ -80,17 +80,12 @@ jobs:
         description: |
             Build and test FHIR-bridge, analyze code, collect code coverage metrics,
             upload results to sonarcloud.io
-        executor: docker-py3-java11-postgres
+        executor: docker-py3-java11-dependencies
         steps:
             - checkout
             - install-maven
-            - git-clone-ehrbase-repo
             - cache-out-fhirbridge-m2-dependencies
-            - cache-out-ehrbase-m2-dependencies
-            - build-ehrbase
-            - start-ehrbase-server
             - build-and-test-fhirbridge
-            - cache-in-ehrbase-m2-dependencies
             - cache-in-fhirbridge-m2-dependencies
             - start-fhirbridge-application
             - run-robot-integration-tests
@@ -167,41 +162,6 @@ commands:
     #   Y8,           Y8,        ,8P  88   `8b d8'   88  88   `8b d8'   88    d8""""""""8b    88    `8b 88  88         8P          `8b
     #    Y8a.    .a8P  Y8a.    .a8P   88    `888'    88  88    `888'    88   d8'        `8b   88     `8888  88      .a8P   Y8a     a8P
     #     `"Y8888Y"'    `"Y8888Y"'    88     `8'     88  88     `8'     88  d8'          `8b  88      `888  88888888Y"'     "Y88888P"
-
-
-    git-clone-ehrbase-repo:
-        steps:
-            - run:
-                name: CLONE EHRBASE REPO
-                command: |
-                    git clone --depth 1 --branch v0.17.2 git@github.com:ehrbase/ehrbase.git
-                    ls -la
-
-
-    build-ehrbase:
-        steps:
-            - run:
-                name: BUILD EHRBASE SERVER
-                command: |
-                    ls -la
-                    cd ehrbase
-                    mvn package -Dmaven.javadoc.skip=true -Dmaven.test.skip
-
-
-    start-ehrbase-server:
-        steps:
-            - run:
-                name: START EHRBASE SERVER
-                background: true
-                command: |
-                    ls -la
-                    cd ehrbase
-                    EHRbase_VERSION=$(mvn -q -Dexec.executable="echo" \
-                                             -Dexec.args='${project.version}' \
-                                             --non-recursive exec:exec)
-                    echo ${EHRbase_VERSION}
-                    java -jar "application/target/application-${EHRbase_VERSION}.jar" > log
-
 
     build-and-test-fhirbridge:
         description: | 
@@ -324,22 +284,6 @@ commands:
                 key: fhirbridge-{{ checksum "/tmp/fhirbridge_maven_cache_seed" }}
                 paths:
                 - ~/.m2
-
-    cache-out-ehrbase-m2-dependencies:
-        steps:
-            - run:
-                name: Generate Cache Checksum for EHRbase Dependencies
-                command: find ~/projects/ehrbase -name 'pom.xml' | sort | xargs cat > /tmp/ehrbase_maven_cache_seed
-            - restore_cache:
-                key: EHRbase-v1-
-
-    cache-in-ehrbase-m2-dependencies:
-        steps:
-            - save_cache:
-                key: EHRbase-v1-{{ checksum "/tmp/ehrbase_maven_cache_seed" }}
-                paths:
-                    - ~/.m2
-
 
     configure-git-for-ci-bot:
         steps:
@@ -467,20 +411,30 @@ executors:
         docker:
             - image: cimg/python:3.8.5-node
 
-    docker-py3-java11-postgres:
+    docker-py3-java11-dependencies:
         description: |
-            This executor consists of 3 (THREE) docker images. The first one - the base image -
-            is where all commands are executed. The other two imags are service containers w/
-            PostgreSQL DBs, one for EHRbase, one for FHIRbridge.
-            - EHRbase DB is accessible via localhost:5432
-            - FHRIbridge DB is accessible via fhirdb:5432
+            This executor consists of 4 (FOUR) docker images. The first one - the base image -
+            is where all commands are executed. Then following two images are to run EHRbase,
+            namely a PostgreSQL DB used by EHRbase, and EHRbase itself. The latter image is a
+            PostgreSQL DB used by FHIR Bridge itself
         working_directory: ~/projects
         docker:
             - image: cimg/python:3.8.5-node
             - image: ehrbase/ehrbase-postgres:13.4
+              name: ehrbase-database
               environment:
                 POSTGRES_USER: postgres
                 POSTGRES_PASSWORD: postgres
+            - image: ehrbase/ehrbase:0.17.2
+              name: ehrbase
+              environment:
+                  DB_URL: jdbc:postgresql://ehrbase-database:5432/ehrbase
+                  DB_USER: ehrbase
+                  DB_PASS: ehrbase
+                  AUTH_TYPE: BASIC
+                  AUTH_USER: ehrbase-user
+                  AUTH_PASSWORD: SuperSecretPassword
+                  SYSTEM_NAME: local.ehrbase.org
             - image: postgres:13.4
               name: fhirdb
               environment:
