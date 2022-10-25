@@ -64,6 +64,12 @@ public class AbstractIntegrationTest {
     @DynamicPropertySource
     private static void setProperties(DynamicPropertyRegistry registry) {
         if (useTestContainers) {
+            registry.add("spring.datasource.url", () -> "jdbc:h2:mem:test_mem");
+            registry.add("spring.datasource.username", () -> "sa");
+            registry.add("spring.datasource.password", () -> "null");
+            registry.add("spring.datasource.driverClassName", () -> "org.h2.Driver");
+            registry.add("spring.jpa.properties.hibernate.dialect", () -> "org.hibernate.dialect.H2Dialect");
+
             registry.add("ehrbase.address", ehrbaseContainer::getHost);
             registry.add("ehrbase.port", () -> ehrbaseContainer.getMappedPort(8080));
             registry.add("ehrbase.path", () -> "/ehrbase/rest/openehr/v1/");

@@ -1,16 +1,3 @@
-server:
-  servlet:
-    context-path: /fhir-bridge
-  port: 8888
-
-fhir-bridge:
-  fhir:
-    narrative-generation: false
-    url-mapping: /fhir/*
-    validation:
-      terminology:
-        mode: off
-
 ehrbase:
   address: localhost
   port: 8080
@@ -21,8 +8,3 @@ spring:
     url: jdbc:postgresql://fhirdb:5432/fhir_bridge
     username: fhir_bridge
     password: fhir_bridge
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL94Dialect
