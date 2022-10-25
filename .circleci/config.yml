@@ -64,7 +64,7 @@ jobs:
 
     build-and-quicktest-fhirbridge:
         description: Build and test FHIR-bridge
-        executor: docker-py3-java11
+        executor: docker-py3-java11-dependencies
         steps:
             - checkout
             - install-maven
@@ -173,7 +173,7 @@ commands:
                 name: BUILD FHIR-BRIDGE
                 command: |
                     ls -la
-                    mvn clean verify -Dmaven.javadoc.skip=true
+                    USETESTCONTAINERS=false mvn clean verify -Dmaven.javadoc.skip=true -Dspring.profiles.active=ci
 
 
     start-fhirbridge-application:
@@ -426,7 +426,6 @@ executors:
                 POSTGRES_USER: postgres
                 POSTGRES_PASSWORD: postgres
             - image: ehrbase/ehrbase:0.17.2
-              name: ehrbase
               environment:
                   DB_URL: jdbc:postgresql://ehrbase-database:5432/ehrbase
                   DB_USER: ehrbase

@@ -200,6 +200,12 @@
             <groupId>com.github.ehrbase.openEHR_SDK</groupId>
             <artifactId>client</artifactId>
             <version>${ehrbase-sdk.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Test Dependencies -->
         <dependency>

@@ -12,7 +12,7 @@ fhir-bridge:
         mode: off
 
 ehrbase:
-  address: ehrbase
+  address: localhost
   port: 8080
   path: /ehrbase/rest/openehr/v1/
 
@@ -21,3 +21,8 @@ spring:
     url: jdbc:postgresql://fhirdb:5432/fhir_bridge
     username: fhir_bridge
     password: fhir_bridge
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
