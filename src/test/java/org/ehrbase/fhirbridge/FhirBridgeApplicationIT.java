@@ -38,9 +38,7 @@ import java.util.UUID;
 /**
  * Integration Tests
  */
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class FhirBridgeApplicationIT {
+public class FhirBridgeApplicationIT extends AbstractIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(FhirBridgeApplicationIT.class);
 
@@ -455,7 +453,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-    
+
     @Test
     public void createRespRate() throws IOException {
         String resource = getContent("classpath:/Observation/observation-example-respiratory-rate.json");
@@ -498,7 +496,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-  
+
     @Test
     public void createBodyWeight() throws IOException {
         String resource = getContent("classpath:/Observation/observation-example-body-weight.json");
@@ -511,7 +509,7 @@ public class FhirBridgeApplicationIT {
         Assertions.assertNotNull(outcome.getResource());
         Assertions.assertEquals("1", outcome.getResource().getMeta().getVersionId());
     }
-    
+
     @Test
     public void createSofaScore() throws IOException {
         String resource = getContent("classpath:/Observation/observation-sofa-score-example.json");
